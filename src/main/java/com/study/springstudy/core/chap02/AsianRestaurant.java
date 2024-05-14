@@ -1,15 +1,10 @@
-package com.study.springstudy.chap03;
+package com.study.springstudy.core.chap02;
 
 public class AsianRestaurant implements Restaurant {
 
-    private Chef chef;
+    private Chef chef = new KimuraChef();
 
-    private Course course;
-
-    public AsianRestaurant(Chef chef, Course course) {
-        this.chef = chef;
-        this.course = course;
-    }
+    private Course course = new SushiCourse();
 
     public void order() {
         System.out.println("아시안 요리를 주문합니다.");

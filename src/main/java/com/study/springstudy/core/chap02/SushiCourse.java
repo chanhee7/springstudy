@@ -1,6 +1,6 @@
-package com.study.springstudy.chap01;
+package com.study.springstudy.core.chap02;
 
-public class SushiCourse {
+public class SushiCourse implements Course {
 
     public void combineMenu() {
         System.out.println("====== 스시 코스 구성 ======");
