@@ -26,8 +26,8 @@
                     이름: ${m.userName} 
                 </a> 
                 &nbsp;&nbsp;&nbsp;
+                
                 <a id="rm-btn" href="#">[delete]</a>
-
             </li>
         </c:forEach>
 

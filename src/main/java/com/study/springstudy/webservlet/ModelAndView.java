@@ -12,6 +12,7 @@ public class ModelAndView {
 
     public ModelAndView(String viewName) {
         this.view = new View(viewName);
+        this.model = new Model();
     }
 
     // 화면 렌더링 기능 (포워딩 or 리다이렉트)
