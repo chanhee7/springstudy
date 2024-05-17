@@ -3,13 +3,19 @@ package com.study.springstudy.springmvc.chap03.controller;
 import com.study.springstudy.springmvc.chap03.dto.ScorePostDto;
 import com.study.springstudy.springmvc.chap03.entity.Score;
 import com.study.springstudy.springmvc.chap03.repository.ScoreJdbcRepository;
+import com.study.springstudy.springmvc.chap03.repository.ScoreRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /*
     # 요청 URL
@@ -19,24 +25,32 @@ import java.util.List;
     2. 성적 정보 등록 처리 요청
     - /score/register : POST
 
-    3. 성적정보 삭제 요청
-    - /score/remove : POST
+    3. 성적정보 삭제 요청 (삭제 요청 = 원래는 POST로 해야 함)
+    - /score/remove : GET
 
     4. 성적정보 상세 조회 요청
     - /score/detail : GET
  */
 @Controller
 @RequestMapping("/score")
+@RequiredArgsConstructor
 public class ScoreController {
 
-    // 의존객체 설정
-    private ScoreJdbcRepository repository = new ScoreJdbcRepository();
+    // 의존객체 설정 ( 불변성 부여 )
+    private final ScoreRepository repository;
+
+//    // @Autowired // 생략가능
+//    // @RequiredArgsConstructor (final 필드 초기화 생성자 대체)
+//    public ScoreController(ScoreRepository repository) {
+//        this.repository = repository;
+//    }
 
     @GetMapping("/list")
-    public String list(Model model) {
+    public String list(@RequestParam(defaultValue = "num") String sort, Model model) {
 //        System.out.println("/score/list : GET!");
 
-        List<Score> scoreList = repository.findAll();
+        List<Score> scoreList = repository.findAll(sort);
+
         model.addAttribute("sList", scoreList);
 
         return "score/score-list";
@@ -56,10 +70,12 @@ public class ScoreController {
         return "redirect:/score/list";
     }
 
-    @PostMapping("/remove")
-    public String remove() {
-//        System.out.println("/score/remove : POST");
-        return "";
+    @GetMapping("/remove")
+    public String remove(@RequestParam("sn") long stuNum) {
+//        System.out.println("/score/remove : GET");
+
+        repository.delete(stuNum);
+        return "redirect:/score/list";
     }
 
     @GetMapping("/detail")
