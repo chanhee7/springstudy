@@ -1,37 +1,66 @@
 package com.study.springstudy.core.chap04;
 
-/*
-    @solution
-    - 객체 생성의 제어권을 이 클래스에서
-      다른 클래스로 이전한다.
-      ex) new 생성자(); -> 이 문법을 담당클래스를 정해서 몰아서 수행시킴
-    - 호텔 객체 생성시 반드시 의존객체를 전달하도록 강요
 
-    // 제어의 역전(IoC) : 객체 생성의 제어권을 외부로 넘긴다.
+/*
+ * @solution
+ * - 객체 생성의 제어권을 이 클래스에서
+ *   다른 클래스로 이전한다.
+ *   ex) new 생성자();  -> 이 문법을 담당클래스를 정해서 몰아서 수행시킴
+ * - 호텔 객체 생성시 반드시 의존객체를 전달하도록 강요
+ *
+ *
+ *  // 제어의 역전(IoC) : 객체 생성의 제어권을 외부로 넘긴다.
     // 의존성 주입(DI) : 외부에서 생성된 객체를 주입받는 개념
  */
 
-import com.study.springstudy.core.chap03.Chef;
-import com.study.springstudy.core.chap03.Restaurant;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
+@Component // Hotel의 객체생성 제어권을 스프링에게 넘김
 public class Hotel {
 
     // 레스토랑
-    private com.study.springstudy.core.chap03.Restaurant restaurant;
+    // @Autowired // 자동으로 객체를 주입해줘~
+    private final Restaurant restaurant;
 
     // 헤드쉐프
-    private com.study.springstudy.core.chap03.Chef headChef;
+    // @Autowired
+    private final Chef headChef;
 
-    public Hotel(Restaurant restaurant, Chef headChef) {
+    // 만약에 해당클래스의 생성자가 단 한개뿐이라면 자동으로 @Autowired를 붙임
+    @Autowired
+    public Hotel(@Qualifier("wwww") Restaurant restaurant, Chef headChef) {
         this.restaurant = restaurant;
         this.headChef = headChef;
     }
 
     // 호텔을 소개하는 기능
     public void inform() {
-        System.out.printf("우리 호텔의 레스토랑은 %s입니다. " + "그리고 헤드쉐프는 %s입니다.\n"
-        , restaurant.getClass().getSimpleName() , headChef.getClass().getSimpleName());
+        System.out.printf("우리 호텔의 레스토랑은 %s입니다. " +
+                        "그리고 헤드쉐프는 %s입니다.\n"
+                , restaurant.getClass().getSimpleName()
+                , headChef.getClass().getSimpleName());
 
         restaurant.order();
+        headChef.cook();
     }
+
+    public Restaurant getRestaurant() {
+        return restaurant;
+    }
+
+    // @Autowired
+//    public void setRestaurant(Restaurant restaurant) {
+//        this.restaurant = restaurant;
+//    }
+
+    public Chef getHeadChef() {
+        return headChef;
+    }
+
+    // @Autowired
+//    public void setHeadChef(Chef headChef) {
+//        this.headChef = headChef;
+//    }
 }
