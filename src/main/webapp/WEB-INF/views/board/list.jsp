@@ -30,17 +30,17 @@
     <h1 class="main-title">꾸러기 게시판</h1>
     <button class="add-btn">새 글 쓰기</button>
   </div>
-
+<c:foreach var="c" items="${c.List}">
   <div class="card-container">
 
       <div class="card-wrapper">
         <section class="card" data-bno="1">
           <div class="card-title-wrapper">
-            <h2 class="card-title">메롱메롱</h2>
+            <h2 class="card-title">${c.title}</h2>
             <div class="time-view-wrapper">
               <div class="time">
                 <i class="far fa-clock"></i>
-                  2023-03-31</div>
+                  ${c.regDateTime}</div>
               <div class="view">
                 <i class="fas fa-eye"></i>
                 <span class="view-count">0</span>
@@ -49,7 +49,7 @@
           </div>
           <div class="card-content">
 
-              djsfldjsfsdf
+              ${c.content}
 
           </div>
         </section>
@@ -62,6 +62,7 @@
 
 
   </div>
+</c:foreach>
 
 </div>
 
