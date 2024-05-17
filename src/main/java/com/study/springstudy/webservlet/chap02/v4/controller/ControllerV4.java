@@ -1,7 +1,6 @@
 package com.study.springstudy.webservlet.chap02.v4.controller;
 
 import com.study.springstudy.webservlet.Model;
-import com.study.springstudy.webservlet.ModelAndView;
 
 import java.util.Map;
 
