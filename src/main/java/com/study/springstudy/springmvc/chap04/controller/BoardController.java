@@ -32,20 +32,17 @@ public class BoardController {
 
     // 2. 글 쓰기 양식 화면 열기 요청 (/board/write : GET)
     @GetMapping("/write")
-    public String write(int boardNo, Model model) {
-
-        Board board = boardRepository.findOne(boardNo);
-        model.addAttribute("bd", board);
-
+    public String open() {
         return "board/write";
     }
 
     // 3. 게시글 등록 요청 (/board/write : POST)
     // -> 목록조회 요청 리다이렉션
     @PostMapping("/write")
-    public String save(BoardDto dto, Model model) {
+    public String save(BoardDto dto) {
 
-
+        Board b = new Board(dto);
+        boardRepository.save(b);
 
         return "redirect:/board/list";
     }
@@ -53,15 +50,21 @@ public class BoardController {
     // 4. 게시글 삭제 요청 (/board/delete : GET)
     // -> 목록조회 요청 리다이렉션
     @GetMapping("/delete")
-    public String delete() {
+    public String delete(int boardNo) {
+
+        boardRepository.delete(boardNo);
         return "redirect:/board/list";
     }
 
+
     // 5. 게시글 상세 조회 요청 (/board/detail : GET)
     @GetMapping("/detail")
-    public String detail(int boardNo) {
+    public String detail(int bno, Model model) {
 
-        boardRepository.delete(boardNo);
+        Board board = boardRepository.findOne(bno);
+        model.addAttribute("b", board);
+        boardRepository.viewCount(board, bno);
+
         return "board/detail";
     }
 

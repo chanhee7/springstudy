@@ -30,39 +30,39 @@
     <h1 class="main-title">꾸러기 게시판</h1>
     <button class="add-btn">새 글 쓰기</button>
   </div>
-<c:foreach var="c" items="${c.List}">
   <div class="card-container">
+    <c:forEach var="b" items="${bList}">
 
       <div class="card-wrapper">
-        <section class="card" data-bno="1">
+        <section class="card" data-bno=${b.boardNo}>
           <div class="card-title-wrapper">
-            <h2 class="card-title">${c.title}</h2>
+            <h2 class="card-title">${b.title}</h2>
             <div class="time-view-wrapper">
               <div class="time">
                 <i class="far fa-clock"></i>
-                  ${c.regDateTime}</div>
+                  ${b.regDateTime}</div>
               <div class="view">
                 <i class="fas fa-eye"></i>
-                <span class="view-count">0</span>
+                <span class="view-count">${b.viewCount}</span>
               </div>
             </div>
           </div>
           <div class="card-content">
 
-              ${c.content}
+              ${b.content}
 
           </div>
         </section>
         <div class="card-btn-group">
-          <button class="del-btn" data-href="#">
+          <button class="del-btn" data-href="/board/delete?boardNo=${b.boardNo}">
             <i class="fas fa-times"></i>
           </button>
         </div>
       </div>
+      </c:forEach>
 
 
   </div>
-</c:foreach>
 
 </div>
 

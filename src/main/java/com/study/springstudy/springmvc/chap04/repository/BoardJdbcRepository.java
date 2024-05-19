@@ -15,19 +15,20 @@ public class BoardJdbcRepository implements BoardRepository {
 
     @Override
     public List<Board> findAll() {
-        return List.of();
+        String sql = "SELECT * FROM tbl_board";
+        return template.query(sql, (rs, n) -> new Board(rs));
     }
 
     @Override
     public Board findOne(int boardNo) {
-        String sql = "SELECT * FROM tbl_board WHERE bno = ?";
-        return template.queryForObject(sql, (rs, n) -> new Board(), boardNo);
+        String sql = "SELECT * FROM tbl_board WHERE board_no = ?";
+        return template.queryForObject(sql, (rs, n) -> new Board(rs), boardNo);
     }
 
     @Override
     public boolean save(Board board) {
         String sql = "INSERT INTO tbl_board " +
-                "(boardNo, title, content, writer, viewCount, regDatetime) " +
+                "(board_no, title, content, writer, view_count, reg_date_time) " +
                 "VALUES (?, ?, ?, ?, ?, ?)";
         return template.update(sql, board.getBoardNo(), board.getTitle(), board.getContent(),
                 board.getWriter(), board.getViewCount(), board.getRegDateTime()) == 1;
@@ -35,7 +36,13 @@ public class BoardJdbcRepository implements BoardRepository {
 
     @Override
     public boolean delete(int boardNo) {
-        String sql = "DELETE FROM tbl_board WHERE bno = ?";
+        String sql = "DELETE FROM tbl_board WHERE board_no = ?";
         return template.update(sql, boardNo) == 1;
+    }
+
+    @Override
+    public void viewCount(Board board, int num) {
+        String sql = "UPDATE tbl_board SET view_count = ? WHERE board_no = ?";
+        template.update(sql, board.getViewCount() + 1, num);
     }
 }
