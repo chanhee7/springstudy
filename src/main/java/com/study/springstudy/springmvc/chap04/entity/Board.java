@@ -1,11 +1,23 @@
 package com.study.springstudy.springmvc.chap04.entity;
 
-import com.study.springstudy.springmvc.chap04.dto.BoardDto;
+import com.study.springstudy.springmvc.chap04.dto.BoardWriteRequestDto;
 import lombok.*;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
+
+/*
+    CREATE TABLE tbl_board (
+        board_no INT(8) PRIMARY KEY auto_increment,
+        title VARCHAR(200) NOT NULL,
+        content TEXT,
+        writer VARCHAR(100) NOT NULL,
+        view_count INT(8) DEFAULT 0,
+        reg_date_time DATETIME DEFAULT current_timestamp
+    );
+ */
 
 @Setter @Getter @ToString
 @EqualsAndHashCode
@@ -26,16 +38,9 @@ public class Board {
         this.content = rs.getString("content");
         this.writer = rs.getString("writer");
         this.viewCount = rs.getInt("view_count");
-        this.regDateTime = rs.getTimestamp("reg_date_time").toLocalDateTime();
-    }
+        Timestamp time = rs.getTimestamp("reg_date_time");
 
-    public Board(BoardDto dto) {
-        this.boardNo = getBoardNo();
-        this.title = dto.getTitle();
-        this.content = dto.getContent();
-        this.writer = dto.getWriter();
-        this.viewCount = getViewCount();
-        this.regDateTime = LocalDateTime.now();
+        if (time != null) this.regDateTime = time.toLocalDateTime();
     }
 
 }
