@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- mapper 파일은 실행할 SQL 을 적는 파일 -->
+<!-- 생성한 mapper 파일은 mybatis-config.xml 에 사용등록을 해야함 -->
+
+<!-- namespace 속성에는 사용할 인터페이스 풀네임을(패키지 + 인터페이스)을 작성 -->
+<!-- 설정파일에 mapper 등록 -->
+<mapper namespace="com.study.springstudy.springmvc.chap03.mapper.ScoreMapper">
+
+
+    <insert id="save">
+        INSERT INTO tbl_score
+             (stu_name, kor, eng, math, total, average, grade)
+        VALUES
+             (#{stuName}, #{kor}, #{eng}, #{math}, #{total}, #{average}, #{grade})
+    </insert>
+
+
+    <select id="findAll" resultType="score">
+        SELECT * FROM tbl_score
+    </select>
+
+
+    <select id="findOne" resultType="score">
+        SELECT * FROM tbl_score
+        WHERE stu_num = #{stuNum}
+    </select>
+
+
+    <delete id="delete">
+        DELETE FROM tbl_score
+        WHERE stu_num = #{stuNum}
+    </delete>
+
+
+    <select id="findRankByStuNum" resultType="com.study.springstudy.springmvc.chap03.dto.RankDto">
+        SELECT A.rank, A.cnt AS count
+        FROM (SELECT *,
+            RANK() OVER (ORDER BY average DESC) AS "rank",
+            COUNT(*) OVER() AS cnt
+        FROM tbl_score) A
+        WHERE A.stu_num = #{stuNum}
+    </select>
+
+
+    <update id="updateScore">
+        UPDATE tbl_score
+        SET kor = #{kor}, eng = #{eng}, math = #{math},
+        total = #{total}, average =#{average}, grade = #{grade}
+        WHERE stu_num = #{stuNum}
+    </update>
+
+</mapper>

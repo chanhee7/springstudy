@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- mapper 파일은 실행할 SQL 을 적는 파일 -->
+<!-- 생성한 mapper 파일은 mybatis-config.xml 에 사용등록을 해야함 -->
+
+<!-- namespace 속성에는 사용할 인터페이스 풀네임을(패키지 + 인터페이스)을 작성 -->
+<!-- 설정파일에 mapper 등록 -->
+<mapper namespace="com.study.springstudy.springmvc.chap04.mapper.BoardMapper">
+
+    <select id="findAll" resultType="board">
+        SELECT * FROM tbl_board
+        ORDER BY board_no DESC
+    </select>
+
+
+    <select id="findOne" resultType="board">
+        SELECT * FROM tbl_board
+        WHERE board_no = #{boardNo}
+    </select>
+
+
+    <insert id="save">
+        INSERT INTO tbl_board
+        (title, content, writer)
+        VALUES (#{title}, #{content}, #{writer})
+    </insert>
+
+
+    <delete id="delete">
+        DELETE FROM tbl_board
+        WHERE board_no = #{boardNo}
+    </delete>
+
+
+    <update id="viewCount">
+        UPDATE tbl_board
+        SET view_count = view_count + 1
+        WHERE board_no = #{boardNo}
+    </update>
+
+</mapper>
