@@ -7,20 +7,25 @@
   <title>Web Study</title>
 
   <style>
-/* 
-    body {
-      background: url('/assets/img/마멜이.png') no-repeat center/cover;
-    } */
 
-    /* body {
-      background: blue;
-    } */
+    body {
+      display: flex;
+      height: 100vh;
+    }
+
+    div.image {
+      background: url('/assets/img/뚱이.png') no-repeat center/cover;
+      width: 100%;
+      height: 100%;
+    }
 
   </style>
 </head>
 <body>
-  <h1>hello!!! JSP</h1>
 
+  
+  <h1>hello!!! JSP</h1>
+  
   <a href="/chap01/join">회원가입하기</a> <br>
   <a href="/chap02/v1/join">회원가입하기(front v1)</a> <br>
   <a href="/chap02/v2/join">회원가입하기(front v2)</a> <br>
@@ -29,5 +34,8 @@
   <a href="/chap02/v5/join">회원가입하기(front v5)</a> <br>
   <a href="/score/list">성적정보 관리 프로그램</a> <br>
   <a href="/board/list">게시물 관리 프로그램</a> <br>
+  
+  <div class="image"></div>
+  
 </body>
 </html>
