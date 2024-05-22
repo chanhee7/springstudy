@@ -17,6 +17,9 @@
   <!-- fontawesome css: https://fontawesome.com -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css">
 
+  <!-- bootstrap css -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  
   <link rel="stylesheet" href="/assets/css/main.css">
   <link rel="stylesheet" href="/assets/css/list.css">
 
@@ -24,7 +27,7 @@
     .card-container .card .card-title-wrapper .time-view-wrapper>div.hit {
       background: yellow;
     }
-    .card-container .card .card-title-wrapper .time-view-wrapper>div.new{
+    .card-container .card .card-title-wrapper .time-view-wrapper>div.new {
       background: red;
     }
   </style>
@@ -78,12 +81,57 @@
           </button>
         </div>
       </div>
+      <!-- end div.card-wrapper -->
       </c:forEach>
 
-
   </div>
+<!-- end div.card-container -->
+
+        <!-- 게시글 목록 하단 영역 -->
+        <div class="bottom-section">
+
+          <!-- 페이지 버튼 영역 -->
+          <nav aria-label="Page navigation example">
+            <ul class="pagination pagination-lg pagination-custom">
+
+              <!-- 맨 첫번째 페이지로 이동 -->
+              <li class="page-item">
+                <a class="page-link" href="#"><<</a>
+              </li>
+
+              <!-- prev 버튼 -->
+              <c:if test="${maker.prev}">
+              <li class="page-item">
+                <a class="page-link" href="/board/list?pageNo=${maker.begin - 1}">prev</a>
+              </li>
+              </c:if>
+              
+              <c:forEach var="i" begin="${maker.begin}" end="${maker.end}">
+              <li data-page-num="${i}" class="page-item">
+                <a class="page-link" href="/board/list?pageNo=${i}">${i}</a>
+              </li>
+            </c:forEach>
+
+            <!-- next 버튼 -->
+            <c:if test="${maker.next}">
+            <li class="page-item">
+              <a class="page-link" href="/board/list?pageNo=${maker.end + 1}">next</a>
+            </li>
+            </c:if>
+
+            <!-- 맨 마지막 페이지로 이동 -->
+            <li class="page-item">
+              <a class="page-link" href="#">>></a>
+            </li>
+
+            </ul>
+          </nav>
+
+        </div>
+        <!-- end div.bottom-section -->
 
 </div>
+<!-- end div.wrap -->
 
 <!-- 모달 창 -->
 <div class="modal" id="modal">
