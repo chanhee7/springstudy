@@ -95,9 +95,6 @@ public class PageMaker {
         this.firstPage = begin != 1;
         // 7. 마지막페이지로 이동 버튼 활성화 여부
         this.lastPage = this.end < finalPage;
-
-        // 8. 현재 페이지 확인 여부
-        this.currentPage = pageInfo;
     }
 
 }
