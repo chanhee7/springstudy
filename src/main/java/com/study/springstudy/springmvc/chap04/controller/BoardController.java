@@ -2,6 +2,7 @@ package com.study.springstudy.springmvc.chap04.controller;
 
 import com.study.springstudy.springmvc.chap04.common.Page;
 import com.study.springstudy.springmvc.chap04.common.PageMaker;
+import com.study.springstudy.springmvc.chap04.common.Search;
 import com.study.springstudy.springmvc.chap04.dto.BoardDetailResponseDto;
 import com.study.springstudy.springmvc.chap04.dto.BoardWriteRequestDto;
 import com.study.springstudy.springmvc.chap04.dto.BoardListResponseDto;
@@ -28,7 +29,7 @@ public class BoardController {
 
     // 1. 목록 조회 요청 (/board/list : GET)
     @GetMapping("/list")
-    public String list(Page page, Model model) {
+    public String list(Search page, Model model) {
 
         // 1. 데이터베이스로 부터 게시글 목록 조회
 //        List<Board> boardList = boardRepository.findAll();

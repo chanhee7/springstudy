@@ -24,6 +24,11 @@
   <link rel="stylesheet" href="/assets/css/list.css">
 
   <style>
+    body {
+      background: url('/assets/img/뚱이.png');
+      background-size: contain;
+    }
+
     .card-container .card .card-title-wrapper .time-view-wrapper>div.hit {
       background: yellow;
     }
@@ -42,6 +47,29 @@
     <h1 class="main-title">꾸러기 게시판</h1>
     <button class="add-btn">새 글 쓰기</button>
   </div>
+
+  <div class="top-section">
+    <!-- 검색창 영역 -->
+    <div class="search">
+        <form action="/board/list" method="get">
+
+        <select class="form-select" name="" id="search-type">
+          <option value="title" selected>제목</option>
+          <option value="content">내용</option>
+          <option value="writer">작성자</option>
+          <option value="tc">제목+내용</option>
+        </select>
+
+        <input type="text" class="form-control" name="">
+
+        <button class="btn btn-primary" type="submit">
+          <i class="fas fa-search"></i>
+        </button>
+
+       </form>
+      </div>
+    </div>
+
   <div class="card-container">
 
     <c:forEach var="b" items="${bList}">
@@ -95,12 +123,14 @@
             <ul class="pagination pagination-lg pagination-custom">
 
               <!-- 맨 첫번째 페이지로 이동 -->
-              <li class="page-item">
-                <a class="page-link" href="#"><<</a>
+              <c:if test="${maker.firstPage}">
+              <li class="first-page">
+                <a class="page-link" href="/board/list?pageNo=1"><<</a>
               </li>
+              </c:if>
 
               <!-- prev 버튼 -->
-              <c:if test="${maker.prev}">
+              <c:if test="${maker.pageInfo.pageNo != 1}">
               <li class="page-item">
                 <a class="page-link" href="/board/list?pageNo=${maker.begin - 1}">prev</a>
               </li>
@@ -120,9 +150,11 @@
             </c:if>
 
             <!-- 맨 마지막 페이지로 이동 -->
-            <li class="page-item">
-              <a class="page-link" href="#">>></a>
-            </li>
+            <c:if test="${maker.lastPage}">
+              <li class="last-page">
+                <a class="page-link" href="/board/list?pageNo=${maker.finalPage}">>></a>
+              </li>
+            </c:if>
 
             </ul>
           </nav>
@@ -241,6 +273,23 @@
   document.querySelector('.add-btn').onclick = e => {
     window.location.href = '/board/write';
   };
+
+  function appendActivePage() {
+
+    // 1. 현재 위치한 페이지 번호를 알아낸다.
+    // -> 주소창에 묻어있는 페이지 파라미터 숫자를 읽거나
+    //    서버에서 내려준 페이지번호를 읽는다.
+    const currentPage = '${maker.pageInfo.pageNo}';
+
+    // 2. 해당 페이지 번호와 일치하는 li태그를 탐색한다.
+    // <%-- JSP에서 자바스크립트의 ${}템플릿리터럴를 사용할땐 \${} 라고 작성해줌 --%>
+    const $li = document.querySelector(`.pagination li[data-page-num="\${currentPage}"]`);
+
+    // 3. 해당 li태그에 class = active를 추가한다.
+    $li.classList.add('active');
+  }
+
+  appendActivePage();
 
 
 
