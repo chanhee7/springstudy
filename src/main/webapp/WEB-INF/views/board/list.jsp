@@ -53,14 +53,14 @@
     <div class="search">
         <form action="/board/list" method="get">
 
-        <select class="form-select" name="" id="search-type">
+        <select class="form-select" name="type" id="search-type">
           <option value="title" selected>제목</option>
           <option value="content">내용</option>
           <option value="writer">작성자</option>
           <option value="tc">제목+내용</option>
         </select>
 
-        <input type="text" class="form-control" name="">
+        <input type="text" class="form-control" name="keyword">
 
         <button class="btn btn-primary" type="submit">
           <i class="fas fa-search"></i>
@@ -68,6 +68,14 @@
 
        </form>
       </div>
+
+      <div class="amount">
+        <div><a href="#">6</a></div>
+        <div><a href="#">18</a></div>
+        <div><a href="#">30</a></div>
+      </div>
+
+
     </div>
 
   <div class="card-container">
@@ -125,34 +133,34 @@
               <!-- 맨 첫번째 페이지로 이동 -->
               <c:if test="${maker.firstPage}">
               <li class="first-page">
-                <a class="page-link" href="/board/list?pageNo=1"><<</a>
+                <a class="page-link" href="/board/list?pageNo=1&type=${s.type}&keyword=${s.keyword}">&lt;&lt;</a>
               </li>
               </c:if>
 
               <!-- prev 버튼 -->
               <c:if test="${maker.pageInfo.pageNo != 1}">
               <li class="page-item">
-                <a class="page-link" href="/board/list?pageNo=${maker.begin - 1}">prev</a>
+                <a class="page-link" href="/board/list?pageNo=${maker.begin - 1}&type=${s.type}&keyword=${s.keyword}">prev</a>
               </li>
               </c:if>
               
               <c:forEach var="i" begin="${maker.begin}" end="${maker.end}">
               <li data-page-num="${i}" class="page-item">
-                <a class="page-link" href="/board/list?pageNo=${i}">${i}</a>
+                <a class="page-link" href="/board/list?pageNo=${i}&type=${s.type}&keyword=${s.keyword}">${i}</a>
               </li>
             </c:forEach>
 
             <!-- next 버튼 -->
             <c:if test="${maker.next}">
             <li class="page-item">
-              <a class="page-link" href="/board/list?pageNo=${maker.end + 1}">next</a>
+              <a class="page-link" href="/board/list?pageNo=${maker.end + 1}&type=${s.type}&keyword=${s.keyword}">next</a>
             </li>
             </c:if>
 
             <!-- 맨 마지막 페이지로 이동 -->
             <c:if test="${maker.lastPage}">
               <li class="last-page">
-                <a class="page-link" href="/board/list?pageNo=${maker.finalPage}">>></a>
+                <a class="page-link" href="/board/list?pageNo=${maker.finalPage}&type=${s.type}&keyword=${s.keyword}">&gt;&gt;</a>
               </li>
             </c:if>
 

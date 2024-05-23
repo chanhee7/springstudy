@@ -10,10 +10,10 @@
 <!-- 설정파일에 mapper 등록 -->
 <mapper namespace="com.study.springstudy.springmvc.chap04.mapper.BoardMapper">
 
-    <select id="findAll" resultType="board">
-        SELECT * FROM tbl_board
+<!-- 동적 SQL 조건을 분리 -->
+    <sql id="search">
         <if test="type == 'title'">
-        WHERE title LIKE CONCAT('%', #{keyword}, '%')
+            WHERE title LIKE CONCAT('%', #{keyword}, '%')
         </if>
         <if test="type == 'content'">
             WHERE content LIKE CONCAT('%', #{keyword}, '%')
@@ -23,8 +23,13 @@
         </if>
         <if test="type == 'tc'">
             WHERE title LIKE CONCAT('%', #{keyword}, '%')
-                OR content LIKE CONCAT('%', #{keyword}, '%')
+            OR content LIKE CONCAT('%', #{keyword}, '%')
         </if>
+    </sql>
+
+    <select id="findAll" resultType="board">
+        SELECT * FROM tbl_board
+        <include refid="search"/>
         ORDER BY board_no DESC
         LIMIT #{pageStart}, #{amount}
     </select>
@@ -59,6 +64,7 @@
     <select id="count" resultType="int">
         SELECT COUNT(*)
         FROM tbl_board
+        <include refid="search"/>
     </select>
 
 </mapper>

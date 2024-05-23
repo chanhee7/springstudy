@@ -52,7 +52,7 @@ public class BoardService {
     }
 
     // 총 게시물 수
-    public int getCount() {
-        return mapper.count();
+    public int getCount(Search search) {
+        return mapper.count(search);
     }
 }

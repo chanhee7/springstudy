@@ -9,13 +9,9 @@
   <style>
 
     body {
-      background: url('/assets/img/뚱이.png') no-repeat center/cover;
+      background: url('/assets/img/뚱이.png') center/cover;
       background-size: contain;
-      height: 96vh;
-    }
-
-    div {
-      width: 100%;
+      /* height: 96vh; */
     }
 
   </style>
