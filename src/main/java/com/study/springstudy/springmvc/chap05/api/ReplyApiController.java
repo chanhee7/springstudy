@@ -96,4 +96,16 @@ public class ReplyApiController {
         return errors;
     }
 
+    // url 에 붙어있는 데이터 읽으려면 @PathVariable
+    // 삭제 처리 요청
+    @DeleteMapping("/{rno}")
+    public ResponseEntity<?> delete(@PathVariable long rno) {
+
+        List<ReplyDetailDto> dtoList = replyService.remove(rno);
+
+        return ResponseEntity
+                .ok()
+                .body(dtoList);
+    }
+
 }
