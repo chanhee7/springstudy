@@ -52,10 +52,10 @@ public class BoardService {
         if (findOne != null) boardmapper.viewCount(boardNo);
 
         // 댓글 목록 조회
-        List<Reply> replies = replyMapper.findAll(boardNo);
+//        List<Reply> replies = replyMapper.findAll(boardNo);
 
         BoardDetailResponseDto responseDto = new BoardDetailResponseDto(findOne);
-        responseDto.setReplies(replies);
+//        responseDto.setReplies(replies);
 
         return responseDto;
     }
