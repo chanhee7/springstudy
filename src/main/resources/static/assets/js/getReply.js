@@ -33,15 +33,51 @@ function getRelativeTime(createAt) {
     }
 }
 
-export function renderReplies(replies) {
+
+function renderPage({ begin, end, pageInfo, prev, next }) {
+  let tag = '';
+
+  // prev 만들기
+  if (prev) tag += `
+  <li class='page-item'>
+  <a class='page-link page-active' href='${begin - 1}'>이전</a>
+  </li>
+  `;
+
+  // 페이지 번호 태그 만들기
+  for (let i = begin; i <= end; i++) {
+
+    let active = '';
+    if (pageInfo.pageNo == i) active = 'p-active';
+
+    tag += `
+    <li class='page-item ${active}'>
+    <a class='page-link page-custom' href='${i}'>${i}</a>
+    </li>
+    `;
+  }
+
+  // next 만들기
+  if (next) tag += `
+  <li class='page-item'>
+  <a class='page-link page-active' href='${end + 1}'>다음</a>
+  </li>
+  `;
+
+  // 페이지 태그 ul에 붙이기
+  const $pageUl = document.querySelector('.pagination');
+  $pageUl.innerHTML = tag;
+}
+
+export function renderReplies({ pageInfo, replies }) {
 
   // 댓글 수 렌더링
-  document.getElementById("replyCnt").textContent = replies.length;
+  document.getElementById("replyCnt").textContent = pageInfo.totalCount;
 
   // 댓글 목록 렌더링
   let tag = "";
   if (replies && replies.length > 0) {
-    replies.forEach(({ reply_no: rno, writer, text, createAt }) => {
+    replies.forEach(({ rno, writer, text, createAt }) => {
       tag += `
       <div id='replyContent' class='card-body' data-reply-id='${rno}'>
           <div class='row user-block'>
@@ -65,15 +101,31 @@ export function renderReplies(replies) {
   }
 
   document.getElementById("replyData").innerHTML = tag;
+
+  // 페이지 태그 렌더링
+  renderPage(pageInfo);
+
 }
 
-export async function fetchReplies() {
+// 서버에서 댓글 목록 가져오는 비동기 요청 함수
+export async function fetchReplies(pageNo=1) {
   const bno = document.getElementById("wrap").dataset.bno; // 게시물 글번호
   console.log("글번호: ", bno);
 
-  const res = await fetch(`${BASE_URL}/${bno}`);
-  const replies = await res.json();
+  const res = await fetch(`${BASE_URL}/${bno}/page/${pageNo}`);
+  const replyResponse = await res.json();
+  // { pageInfo: {}, replies: [] }
 
   // 댓글 목록 렌더링
-  renderReplies(replies);
+  renderReplies(replyResponse);
+}
+
+// 페이지 클릭 이벤트 생성 함수
+export function replyPageClickEvent() {
+
+  document.querySelector('.pagination').addEventListener('click', e => {
+    e.preventDefault();
+    // console.log(e.target.getAttribute('href'));
+    fetchReplies(e.target.getAttribute('href'));
+  });
 }
