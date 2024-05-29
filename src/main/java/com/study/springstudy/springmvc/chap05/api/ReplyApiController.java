@@ -128,7 +128,7 @@ public class ReplyApiController {
     public  ResponseEntity<?> modify(@Validated @RequestBody ReplyModifyDto dto
             , BindingResult result) {
 
-        log.info("/api/v1/replies : POST");
+        log.info("/api/v1/replies : POST, PATCH");
         log.debug("parameter: {}", dto);
 
         if (result.hasErrors()) {
