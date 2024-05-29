@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 public class ReplyDetailDto {
 
     // rno 명칭을 reply_no 로 변경 (필드명을 직접 바꾸기보단 @JsonProperty 활용해서 변경)
+    // getReply.js 147번줄 rno -> reply_no: rno 로 변경해주어야 함
 //    @JsonProperty("reply_no")
     private long rno;
     private String text;
