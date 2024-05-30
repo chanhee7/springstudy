@@ -1,59 +1,77 @@
+// 서버에 중복확인 비동기 요청
+export const checkAvailability = async (type, keyword) => {
+  const response = await fetch(`http://localhost:8383/members/check?type=${type}&keyword=${keyword}`);
+  const flag = await response.json();
+  return !flag;
+};
 
-// 회원가입 입력 검증 처리
+// 유효성 검증에 사용될 정규표현식 패턴들 정의
 
-// 계정 중복검사 비동기 요청 보내기
-async function fetchDuplicateCheck(idValue) {
-  const res = await fetch(
-    `http://localhost:8383/members/check?type=account&keyword=${idValue}`
-  );
-  const flag = await res.json();
+// 아이디 패턴: 영문 대소문자와 숫자, 4~14글자
+const accountPattern = /^[a-zA-Z0-9]{4,14}$/;
 
-  idFlag = flag;
-}
+// 비밀번호 패턴: 반드시 영문, 숫자, 특수문자를 포함하여 8자 이상
+const passwordPattern = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*?_~])[A-Za-z\d!@#$%^&*?_~]{8,}$/;
 
-// 계정 입력 검증
-const $idInput = document.getElementById("user_id");
-let idFlag = false;
-
-$idInput.addEventListener("keyup", async (e) => {
-  // 아이디 검사 정규표현식
-  const accountPattern = /^[a-zA-Z0-9]{4,14}$/;
-
-  // 입력값 읽어오기
-  const idValue = $idInput.value;
-
-  // 검증 메시지를 입력할 span
-  const $idChk = document.getElementById("idChk");
-
-  if (idValue.trim() === "") {
-    $idInput.style.borderColor = "red";
-    $idChk.innerHTML = '<b class="warning">[아이디는 필수값입니다.]</b>';
-  } else if (!accountPattern.test(idValue)) {
-    $idInput.style.borderColor = "red";
-    $idChk.innerHTML =
-      '<b class="warning">[아이디는 4~14글자 사이 영문,숫자로 입력하세요]</b>';
-  } else {
-    // 아이디 중복검사
-    await fetchDuplicateCheck(idValue);
-
-    if (idFlag) {
-      $idInput.style.borderColor = "red";
-      $idChk.innerHTML =
-        '<b class="warning">[아이디가 중복되었습니다. 다른 아이디를 사용하세요!]</b>';
-    } else {
-      $idInput.style.borderColor = "skyblue";
-      $idChk.innerHTML = '<b class="success">[사용가능한 아이디입니다.]</b>';
-    }
-  }
-});
-
-
-// 패스워드 검사 정규표현식
-const passwordPattern =
-  /([a-zA-Z0-9].*[!,@,#,$,%,^,&,*,?,_,~])|([!,@,#,$,%,^,&,*,?,_,~].*[a-zA-Z0-9])/;
-
-// 이름 검사 정규표현식
+// 이름 패턴: 한글만 허용
 const namePattern = /^[가-힣]+$/;
 
-// 이메일 검사 정규표현식
+// 이메일 패턴: 기본적인 이메일 형식
 const emailPattern = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/;
+
+export const validateInput = {
+  // 아이디 유효성 검사 함수
+  account: async (value) => {
+    // 빈 값 검사
+    if (!value.trim()) return { valid: false, message: '아이디는 필수값입니다!' };
+    // 정규표현식 검사
+    if (!accountPattern.test(value)) return { valid: false, message: '아이디는 4~14글자의 영문,숫자로 입력하세요.' };
+    // 중복 검사
+    const isAvailable = await checkAvailability('account', value);
+    // 중복 여부에 따라 결과 반환
+    return isAvailable ? { valid: true } : { valid: false, message: '아이디가 중복되었습니다.' };
+  },
+  // 비밀번호 유효성 검사 함수
+  password: (value, password) => {
+    const pwChk = document.getElementById('password_check');
+
+    // 빈 값 검사
+    if (!value.trim()) return { valid: false, message: '비밀번호는 필수값입니다!' };
+    // 정규표현식 검사
+    if (!passwordPattern.test(value)) return { valid: false, message: '비밀번호는 영문, 숫자, 특수문자를 포함하여 8자 이상이어야 합니다!' };
+
+    if (value !== password && pwChk == null) return { valid: false, message: '비밀번호가 일치하지 않습니다!' };
+
+    // 유효한 경우
+    return { valid: true };
+  },
+  // 비밀번호 확인 유효성 검사 함수
+  passwordCheck: (value, password) => {
+    // 빈 값 검사
+    if (!value.trim()) return { valid: false, message: '비밀번호 확인란은 필수값입니다!' };
+    // 비밀번호 일치 여부 검사
+    if (value !== password) return { valid: false, message: '비밀번호가 일치하지 않습니다!' };
+    // 유효한 경우
+    return { valid: true };
+  },
+  // 이름 유효성 검사 함수
+  name: (value) => {
+    // 빈 값 검사
+    if (!value.trim()) return { valid: false, message: '이름은 필수정보입니다!' };
+    // 정규표현식 검사
+    if (!namePattern.test(value)) return { valid: false, message: '이름은 한글로 입력해주세요.' };
+    // 유효한 경우
+    return { valid: true };
+  },
+  // 이메일 유효성 검사 함수
+  email: async (value) => {
+    // 빈 값 검사
+    if (!value.trim()) return { valid: false, message: '이메일은 필수값입니다!' };
+    // 정규표현식 검사
+    if (!emailPattern.test(value)) return { valid: false, message: '이메일 형식을 지켜주세요.' };
+    // 중복 검사
+    const isAvailable = await checkAvailability('email', value);
+    // 중복 여부에 따라 결과 반환
+    return isAvailable ? { valid: true } : { valid: false, message: '이메일이 중복되었습니다.' };
+  }
+};
