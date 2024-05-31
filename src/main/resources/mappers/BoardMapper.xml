@@ -28,7 +28,13 @@
     </sql>
 
     <select id="findOne" resultType="board">
-        SELECT * FROM tbl_board
+        SELECT
+        B.board_no, B.title, M.name AS writer
+        , B.content, B.view_count
+        , B.reg_date_time, M.account
+        FROM tbl_board B
+        LEFT OUTER JOIN tbl_member M
+        ON B.account = M.account
         WHERE board_no = #{boardNo}
     </select>
 
@@ -41,7 +47,8 @@
             B.writer,
             B.reg_date_time,
             B.view_count,
-            COUNT(R.reply_no) AS reply_count
+            COUNT(R.reply_no) AS reply_count,
+            B.account
         FROM tbl_board B
         LEFT OUTER JOIN tbl_reply R
         ON B.board_no = R.board_no
@@ -54,8 +61,8 @@
 
     <insert id="save">
         INSERT INTO tbl_board
-        (title, content, writer)
-        VALUES (#{title}, #{content}, #{writer})
+        (title, content, writer, account)
+        VALUES (#{title}, #{content}, #{writer}, #{account})
     </insert>
 
 
