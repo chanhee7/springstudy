@@ -9,7 +9,7 @@
         <img width="80px" src="/assets/img/뚱이.png" alt="">
       </a>
     </h1>
-    <h2 class="intro-text">Welcome</h2>
+    <h2 class="intro-text">Welcome ${loginUserName} 님</h2>
     <a href="#" class="menu-open">
       <span class="menu-txt">MENU</span>
       <span class="lnr lnr-menu"></span>
