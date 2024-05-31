@@ -8,6 +8,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import javax.servlet.http.HttpSession;
 
 import static com.study.springstudy.springmvc.chap05.service.LoginResult.*;
 
@@ -34,7 +37,7 @@ public class MemberService {
     }
 
     // 로그인 검증 처리
-    public LoginResult authenticate(LoginDto dto) {
+    public LoginResult authenticate(LoginDto dto, HttpSession session) {
 
         // 회원가입 여부 확인
         String account = dto.getAccount();
@@ -56,6 +59,15 @@ public class MemberService {
         }
 
         log.info("{}님 로그인 성공", foundMember.getName());
+
+        // 세션의 수명 : 설정된 시간 OR 브라우저를 닫기 전까지
+        int maxInactiveInterval = session.getMaxInactiveInterval();
+//        session.setMaxInactiveInterval(60 * 60 * 24 * 90); // 세션의 수명 -> 하루 * 90 = 90일
+        session.setMaxInactiveInterval(60 * 60); // 세션의 수명 1시간 설정
+        log.debug("session time: {}", maxInactiveInterval);
+
+        session.setAttribute("loginUserName", foundMember.getName());
+
         return SUCCESS;
     }
 
