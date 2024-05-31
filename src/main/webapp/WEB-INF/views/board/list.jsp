@@ -101,11 +101,16 @@
 
           </div>
         </section>
+
+        <!-- 관리자이거나 본인이 쓴글에만 렌더링되도록 -->
+        <c:if test="${login.auth == 'ADMIN' || login.account == b.account}">
         <div class="card-btn-group">
           <button class="del-btn" data-href="/board/delete?bno=${b.bno}">
             <i class="fas fa-times"></i>
           </button>
         </div>
+      </c:if>
+
       </div>
       <!-- end div.card-wrapper -->
       </c:forEach>
@@ -239,7 +244,7 @@
     $targetCard?.classList.remove('card-hover');
 
     const $delBtn = e.target.closest('.card-wrapper')?.querySelector('.del-btn');
-    $delBtn.style.opacity = '0';
+    $delBtn?.style.opacity = '0';
   }
 
 
@@ -252,7 +257,7 @@
     $targetCard?.classList.add('card-hover');
 
     const $delBtn = e.target.closest('.card-wrapper')?.querySelector('.del-btn');
-    $delBtn.style.opacity = '1';
+    $delBtn?.style.opacity = '1';
   }
 
   $cardContainer.onmousedown = e => {
