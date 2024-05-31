@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,7 +60,7 @@ public class BoardController {
     // 3. 게시글 등록 요청 (/board/write : POST)
     // -> 목록조회 요청 리다이렉션
     @PostMapping("/write")
-    public String save(BoardWriteRequestDto dto) {
+    public String save(BoardWriteRequestDto dto, HttpSession session) {
 
         // 1. 브라우저가 전달한 게시글 내용 읽기
 
@@ -67,7 +68,7 @@ public class BoardController {
 //        Board b = dto.toEntity();
 
         // 3. 데이터베이스 저장 명령
-        service.save(dto);
+        service.save(dto, session);
 
         return "redirect:/board/list";
     }
