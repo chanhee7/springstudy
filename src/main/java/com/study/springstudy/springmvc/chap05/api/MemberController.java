@@ -4,11 +4,11 @@ import com.study.springstudy.springmvc.chap05.dto.request.LoginDto;
 import com.study.springstudy.springmvc.chap05.dto.request.SignUpDto;
 import com.study.springstudy.springmvc.chap05.service.LoginResult;
 import com.study.springstudy.springmvc.chap05.service.MemberService;
+import com.study.springstudy.webservlet.Model;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -75,12 +75,13 @@ public class MemberController {
 
         LoginResult result = memberService.authenticate(dto, session);
 
-        // 로그인 검증 결과를 JSP 에게
+        // 로그인 검증 결과를 JSP 에게 보내기
         // Redirect 를 진행할때 Redirect 된 페이지에 데이터를 보낼 때는
         // Model 객체를 사용할 수 없음
         // 왜냐면 Model 객체는 request 객체를 사용하는데 해당 객체는
         // 한번의 요청이 끝나면 메모리에서 제거된다. 그러나 redirect 는
         // 요청이 2번 발생하므로 다른 request 객체를 jsp 가 사용하게 됨
+//        model.addAttribute("result", result); (사용하면 안됌)
         ra.addFlashAttribute("result", result);
 
         if (result == LoginResult.SUCCESS) {
