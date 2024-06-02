@@ -63,11 +63,8 @@ public class BoardController {
     public String save(BoardWriteRequestDto dto, HttpSession session) {
 
         // 1. 브라우저가 전달한 게시글 내용 읽기
+        System.out.println("dto = " + dto);
 
-        // 2. 해당 게시글을 데이터베이스에 저장하기 위해  엔터티 클래스로 변환
-//        Board b = dto.toEntity();
-
-        // 3. 데이터베이스 저장 명령
         service.save(dto, session);
 
         return "redirect:/board/list";
