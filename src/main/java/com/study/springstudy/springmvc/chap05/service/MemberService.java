@@ -2,8 +2,10 @@ package com.study.springstudy.springmvc.chap05.service;
 
 import com.study.springstudy.springmvc.chap05.dto.request.LoginDto;
 import com.study.springstudy.springmvc.chap05.dto.request.SignUpDto;
+import com.study.springstudy.springmvc.chap05.dto.response.LoginUserInfoDto;
 import com.study.springstudy.springmvc.chap05.entity.Member;
 import com.study.springstudy.springmvc.chap05.mapper.MemberMapper;
+import com.study.springstudy.springmvc.util.LoginUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -67,7 +69,7 @@ public class MemberService {
         session.setMaxInactiveInterval(60 * 60); // 세션의 수명 1시간 설정
         log.debug("session time: {}", maxInactiveInterval);
 
-        session.setAttribute("loginUserName", foundMember.getName());
+        session.setAttribute(LoginUtil.LOGIN, new LoginUserInfoDto(foundMember));
 
         return SUCCESS;
     }
