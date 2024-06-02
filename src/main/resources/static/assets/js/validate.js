@@ -22,6 +22,7 @@ const namePattern = /^[가-힣]+$/;
 // 이메일 패턴: 기본적인 이메일 형식
 const emailPattern = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/;
 
+
 export const validateInput = {
   // 아이디 유효성 검사 함수
   account: async (value) => {
