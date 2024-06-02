@@ -5,10 +5,12 @@ const closeBtn = document.querySelector('.gnb .close');
 const gnb = document.querySelector('.gnb');
 
 //클릭 이벤트 생성
-menuBtn.addEventListener('click', () => {
+menuBtn.addEventListener('click', (e) => {
+  e.preventDefault();
   gnb.classList.add('on');
 });
 
-closeBtn.addEventListener('click', () => {
+closeBtn.addEventListener('click', (e) => {
+  e.preventDefault();
   gnb.classList.remove('on');
 });
