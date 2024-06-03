@@ -1,5 +1,6 @@
 package com.study.springstudy.springmvc.chap05.service;
 
+import com.study.springstudy.springmvc.chap05.dto.request.AutoLoginDto;
 import com.study.springstudy.springmvc.chap05.dto.request.LoginDto;
 import com.study.springstudy.springmvc.chap05.dto.request.SignUpDto;
 import com.study.springstudy.springmvc.chap05.dto.response.LoginUserInfoDto;
@@ -11,10 +12,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.util.WebUtils;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import java.time.LocalDateTime;
+
 import static com.study.springstudy.springmvc.chap05.service.LoginResult.*;
+import static com.study.springstudy.springmvc.util.LoginUtil.AUTO_LOGIN_COOKIE;
 
 @Service
 @RequiredArgsConstructor
@@ -39,7 +47,7 @@ public class MemberService {
     }
 
     // 로그인 검증 처리
-    public LoginResult authenticate(LoginDto dto, HttpSession session) {
+    public LoginResult authenticate(LoginDto dto, HttpSession session, HttpServletResponse response) {
 
         // 회원가입 여부 확인
         String account = dto.getAccount();
@@ -60,22 +68,69 @@ public class MemberService {
             return NO_PW;
         }
 
-        log.info("{}님 로그인 성공", foundMember.getName());
-//        ra.addFlashAttribute("loginUserName", foundMember.getName());
+        // 자동로그인 추가 처리
+        if (dto.isAutoLogin()) {
+            // 1. 자동로그인 쿠키 생성
+            // - 쿠키 내부에 절대로 중복되지 않는 유니크한 값을 저장
+            //   (UUID, SessionID)
+            String sessionId = session.getId();
+            Cookie autoLoginCookie = new Cookie(AUTO_LOGIN_COOKIE, sessionId);
+            // 쿠키 설정
+            autoLoginCookie.setPath("/"); // 쿠키를 사용할 경로
+            autoLoginCookie.setMaxAge(60 * 60 * 24 * 90); // 자동로그인 유지 시간 (90일)
 
-        // 세션의 수명 : 설정된 시간 OR 브라우저를 닫기 전까지
-        int maxInactiveInterval = session.getMaxInactiveInterval();
-//        session.setMaxInactiveInterval(60 * 60 * 24 * 90); // 세션의 수명 -> 하루 * 90 = 90일
-        session.setMaxInactiveInterval(60 * 60); // 세션의 수명 1시간 설정
-        log.debug("session time: {}", maxInactiveInterval);
+            // 2. 쿠키를 클라이언트에 전송 - 응답바디에 실어보내야 함
+            response.addCookie(autoLoginCookie);
 
-        session.setAttribute(LoginUtil.LOGIN, new LoginUserInfoDto(foundMember));
+            // 3. DB 에도 해당 쿠키값을 저장
+            memberMapper.updateAutoLogin(
+                    AutoLoginDto.builder()
+                            .sessionId(sessionId)
+                            .limitTime(LocalDateTime.now().plusDays(90))
+                            .account(account)
+                            .build()
+            );
+        }
+        maintainLoginState(session, foundMember);
 
         return SUCCESS;
     }
+
+    public static void maintainLoginState(HttpSession session, Member foundMember) {
+        log.info("{}님 로그인 성공", foundMember.getName());
+
+        // 세션의 수명 : 설정된 시간 OR 브라우저를 닫기 전까지
+        int maxInactiveInterval = session.getMaxInactiveInterval();
+        session.setMaxInactiveInterval(60 * 60); // 세션 수명 1시간 설정
+        log.debug("session time: {}", maxInactiveInterval);
+
+        session.setAttribute(LoginUtil.LOGIN, new LoginUserInfoDto(foundMember));
+    }
+
 
     // 아이디, 이메일 중복검사
     public boolean checkIdentifier(String type, String keyword) {
         return memberMapper.existsById(type, keyword);
     }
+
+    public void autoLoginClear(HttpServletRequest request, HttpServletResponse response) {
+
+        // 1. 쿠키 제거하기
+        Cookie c = WebUtils.getCookie(request, AUTO_LOGIN_COOKIE);
+        if (c != null) {
+            c.setPath("/");
+            c.setMaxAge(0);
+            response.addCookie(c);
+        }
+
+        // 2. DB 에 자동로그인 컬럼들을 원래대로 돌려놓음
+        memberMapper.updateAutoLogin(
+                AutoLoginDto.builder()
+                        .sessionId("none")
+                        .limitTime(LocalDateTime.now())
+                        .account(LoginUtil.getLoggedInUserAccount(request.getSession()))
+                        .build()
+        );
+    }
+
 }
