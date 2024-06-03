@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +38,7 @@ public class BoardController {
         // 1. 데이터베이스로 부터 게시글 목록 조회
 //        List<Board> boardList = boardRepository.findAll();
         // 서비스에게 조회 요청 위임
-        List<BoardListResponseDto> bList = service.findAll(page);
+        List<BoardListResponseDto> bList = service.findList(page);
         // 페이지 정보를 생성하여 JSP 에게 전송
         PageMaker maker = new PageMaker(page, service.getCount(page));
 
@@ -65,7 +66,7 @@ public class BoardController {
         // 1. 브라우저가 전달한 게시글 내용 읽기
         System.out.println("dto = " + dto);
 
-        service.save(dto, session);
+        service.insert(dto, session);
 
         return "redirect:/board/list";
     }
@@ -76,14 +77,15 @@ public class BoardController {
     @GetMapping("/delete")
     public String delete(int bno) {
 
-        service.delete(bno);
+        service.remove(bno);
         return "redirect:/board/list";
     }
 
 
     // 5. 게시글 상세 조회 요청 (/board/detail : GET)
     @GetMapping("/detail")
-    public String detail(int bno, Model model, HttpServletRequest request) {
+    public String detail(int bno, Model model
+            , HttpServletRequest request, HttpServletResponse response) {
 
         // 1. 상세조회하고 싶은 글번호를 읽기
         System.out.println("bno = " + bno);
@@ -91,7 +93,7 @@ public class BoardController {
         // 2. 데이터베이스로부터 해당 글번호 데이터 조회하기
 //        Board board = boardRepository.findOne(bno);
 //        if (board != null) boardRepository.viewCount(bno);
-        BoardDetailResponseDto dto = service.findOne(bno);
+        BoardDetailResponseDto dto = service.detail(bno, request, response);
 
         // 3. JSP 파일에 조회한 데이터 보내기
         model.addAttribute("b", dto);
