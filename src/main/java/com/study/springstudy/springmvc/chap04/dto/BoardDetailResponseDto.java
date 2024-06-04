@@ -17,7 +17,15 @@ public class BoardDetailResponseDto {
     private String content;
     private String regDateTime;
 
-    @Setter private List<Reply> replies;
+    @Setter
+    private int likeCount; // 좋아요 총 갯수
+    @Setter
+    private int dislikeCount; // 싫어요 총 갯수
+    @Setter
+    private String userReaction; // 현재 리액션 상태
+
+//    @Setter
+//    private List<Reply> replies;
 
     public BoardDetailResponseDto(Board b) {
         this.boardNo = b.getBoardNo();

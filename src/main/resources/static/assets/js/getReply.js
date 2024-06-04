@@ -1,5 +1,6 @@
 import { BASE_URL } from "./reply.js";
 import { showSpinner, hideSpinner } from "./spinner.js";
+import { callApi } from "./api.js";
 
 function getRelativeTime(createAt) {
   // 현재 시간 구하기
@@ -112,8 +113,10 @@ export async function fetchReplies(pageNo=1) {
   const bno = document.getElementById("wrap").dataset.bno; // 게시물 글번호
   console.log("글번호: ", bno);
 
-  const res = await fetch(`${BASE_URL}/${bno}/page/${pageNo}`);
-  const replyResponse = await res.json();
+  const replyResponse = await callApi(`${BASE_URL}/${bno}/page/${pageNo}`);
+
+  // const res = await fetch(`${BASE_URL}/${bno}/page/${pageNo}`);
+  // const replyResponse = await res.json();
   // { pageInfo: {}, replies: [] }
 
   // 댓글 목록 렌더링
@@ -139,15 +142,14 @@ let totalReplies = 0; // 총 댓글 수
 let loadedReplies = 0; // 로딩된 댓글 수
 
 
-function appendReplies({ replies }) {
+function appendReplies({ replies, loginUser }) {
 
   // 댓글 목록 렌더링
   let tag = '';
   if (replies && replies.length > 0) {
-    replies.forEach(({ rno, writer, text, createAt }) => {
-      tag += `
-        <div id='replyContent' class='card-body' data-reply-id='${rno}'>
-            <div class='row user-block'>
+    replies.forEach(({ rno, writer, text, createAt, account: replyAccount }) => {
+        tag+= `<div id='replyContent' class='card-body' data-reply-id='${rno}'>
+              <div class='row user-block'>
                 <span class='col-md-3'>
                     <b>${writer}</b>
                 </span>
@@ -158,9 +160,19 @@ function appendReplies({ replies }) {
             <div class='row'>
                 <div class='col-md-9'>${text}</div>
                 <div class='col-md-3 text-right'>
-                    <a id='replyModBtn' class='btn btn-sm btn-outline-dark' data-bs-toggle='modal' data-bs-target='#replyModifyModal'>수정</a>&nbsp;
+                `;
+
+          // 관리자 이거나 내가 쓴 댓글일 경우만 조건부 렌더링
+          // 로그인한 회원 권한, 로그인한 회원 계정명, 해당 댓글의 계정명
+          if (loginUser) {
+            const { auth, account: loginUserAccount } = loginUser;
+            if (auth === 'ADMIN' || replyAccount === loginUserAccount) {
+              tag += `<a id='replyModBtn' class='btn btn-sm btn-outline-dark' data-bs-toggle='modal' data-bs-target='#replyModifyModal'>수정</a>&nbsp;
                     <a id='replyDelBtn' class='btn btn-sm btn-outline-dark' href='#'>삭제</a>
-                </div>
+                    `;
+            }
+          }
+        tag+=  `</div>
             </div>
         </div>
         `;
@@ -188,6 +200,8 @@ export async function fetchInfScrollReplies(pageNo=1) {
   const bno = document.getElementById('wrap').dataset.bno; // 게시물 글번호
   const res = await fetch(`${BASE_URL}/${bno}/page/${pageNo}`);
   const replyResponse = await res.json();
+
+  // console.log('res:', replyResponse);
 
   if (pageNo === 1) {
     // 총 댓글 수 전역변수 값 세팅
