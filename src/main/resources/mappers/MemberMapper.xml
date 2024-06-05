@@ -7,19 +7,20 @@
 
     <insert id="save">
         INSERT INTO tbl_member
-            (account, password, name, email)
+            (account, password, name, email, profile_img)
         VALUES
-            (#{account}, #{password}, #{name}, #{email})
+            (#{account}, #{password}, #{name}, #{email}, #{profileImg})
     </insert>
 
     <select id="findOne" resultType="member">
         SELECT
-            account,
-            password,
-            name,
-            email,
-            auth,
-            reg_date
+           account
+            , password
+            , name
+            , email
+            , auth
+            , reg_date
+            , profile_img
         FROM tbl_member
         WHERE account = #{account}
     </select>
@@ -35,17 +36,15 @@
         </if>
     </select>
 
-
     <update id="updateAutoLogin">
         UPDATE tbl_member
         SET session_id = #{sessionId}, limit_time = #{limitTime}
         WHERE account = #{account}
     </update>
 
-
     <select id="findMemberBySessionId" resultType="member">
         SELECT
-            account, name, email, auth, limit_time
+            account, name, email, auth, limit_time, profile_img
         FROM tbl_member
         WHERE session_id = #{sessionId}
     </select>

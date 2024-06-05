@@ -33,15 +33,14 @@ public class MemberService {
     private final PasswordEncoder encoder;
 
     // 회원 가입 중간 처리
-    public boolean join(SignUpDto dto) {
+    public boolean join(SignUpDto dto, String profilePath) {
         // dto 를 엔터티로 변환
         Member member = dto.toEntity();
+        member.setProfileImg(profilePath); // 프로필 사진 경로 엔터티에 설정
 
         // 비밀번호를 인코딩(암호화)
         String encodedPassword = encoder.encode(dto.getPassword());
         member.setPassword(encodedPassword);
-
-//        member.setPassword(encoder.encode(dto.getPassword()));
 
         return memberMapper.save(member);
     }
@@ -104,6 +103,7 @@ public class MemberService {
         session.setMaxInactiveInterval(60 * 60); // 세션 수명 1시간 설정
         log.debug("session time: {}", maxInactiveInterval);
 
+        // 세션에 로그인한 회원 정보 세팅
         session.setAttribute(LoginUtil.LOGIN, new LoginUserInfoDto(foundMember));
     }
 
