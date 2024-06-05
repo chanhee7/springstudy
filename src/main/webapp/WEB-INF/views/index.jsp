@@ -19,7 +19,7 @@
   <section class="visual">
       <ul class="slide">
           <li>
-              <img src="/assets/img/뚱이.png" alt="슬라이드 이미지1">
+              <img src="/assets/img/뚱이.jpg" alt="슬라이드 이미지1">
               <div class="txt">
                   <p>Creative design with Hong Studio</p>
                   <h3>Website & APP, <br>Responsive Web and <br>Brand Identity </h3>
@@ -101,7 +101,7 @@
           <ul class="animate" data-animate="fadeInUp" data-duration="1s">
               <li>
                   <a href="#">
-                      <img src="/assets/img/뚱이.png" alt="project1">
+                      <img src="/assets/img/뚱이.jpg" alt="project1">
                       <div class="name">
                           <span>Website</span>
                           <h3>Linkin Aviation</h3>
@@ -110,7 +110,7 @@
               </li>
               <li>
                   <a href="#">
-                      <img src="/assets/img/뚱이.png" alt="project2">
+                      <img src="/assets/img/뚱.jpg" alt="project2">
                       <div class="name">
                           <span>Website</span>
                           <h3>HEESUNG LMS</h3>
@@ -119,7 +119,7 @@
               </li>
               <li>
                   <a href="#">
-                      <img src="/assets/img/뚱이.png" alt="project3">
+                      <img src="/assets/img/뚱2.jpg" alt="project3">
                       <div class="name">
                           <span>Website</span>
                           <h3>ORPHAN</h3>
@@ -128,7 +128,7 @@
               </li>
               <li>
                   <a href="#">
-                      <img src="/assets/img/뚱이.png" alt="project4">
+                      <img src="/assets/img/뚱이.jpg" alt="project4">
                       <div class="name">
                           <span>Website</span>
                           <h3>APMA WEB/APP</h3>
@@ -143,14 +143,14 @@
       <div class="partner">
           <h3>우리의 소중한 고객입니다.</h3>
           <ul class="animate" data-animate="fadeInRight" data-duration="1s">
-              <li><img src="/assets/img/뚱이.png" alt=""></li>
-              <li><img src="/assets/img/뚱이.png" alt=""></li>
-              <li><img src="/assets/img/뚱이.png" alt=""></li>
-              <li><img src="/assets/img/뚱이.png" alt=""></li>
-              <li><img src="/assets/img/뚱이.png" alt=""></li>
-              <li><img src="/assets/img/뚱이.png" alt=""></li>
-              <li><img src="/assets/img/뚱이.png" alt=""></li>
-              <li><img src="/assets/img/뚱이.png" alt=""></li>
+              <li><img src="/assets/img/뚱이.jpg" alt=""></li>
+              <li><img src="/assets/img/뚱.jpg" alt=""></li>
+              <li><img src="/assets/img/뚱2.jpg" alt=""></li>
+              <li><img src="/assets/img/뚱이.jpg" alt=""></li>
+              <li><img src="/assets/img/뚱.jpg" alt=""></li>
+              <li><img src="/assets/img/뚱2.jpg" alt=""></li>
+              <li><img src="/assets/img/뚱이.jpg" alt=""></li>
+              <li><img src="/assets/img/뚱.jpg" alt=""></li>
           </ul>
       </div>
 
