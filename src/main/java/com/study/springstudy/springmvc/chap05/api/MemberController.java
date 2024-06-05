@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
@@ -46,10 +47,16 @@ public class MemberController {
     public String signUp(@Validated SignUpDto dto) {
         log.info("/members/sign-up POST");
         log.debug("parameter: {}", dto);
-        log.debug("attached profile image name: {}", dto.getProfileImage().getOriginalFilename());
 
-        // 서버에 업로드 후 업로드 경로 반환
-        String profilePath = FileUtil.uploadFile(rootPath, dto.getProfileImage());
+        // 프로필 사진 추출
+        MultipartFile profileImage = dto.getProfileImage();
+
+        String profilePath = null;
+        if (!profileImage.isEmpty()) {
+            log.debug("attached profile image name: {}", profileImage.getOriginalFilename());
+            // 서버에 업로드 후 업로드 경로 반환
+            profilePath = FileUtil.uploadFile(rootPath, profileImage);
+        }
 
         boolean flag = memberService.join(dto, profilePath);
 
