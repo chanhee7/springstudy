@@ -19,7 +19,6 @@
           <img src="/assets/img/anonymous.jpg" alt="profile image">
         </c:otherwise>
       </c:choose>
-      <img src="${login.profile}" alt="profile image">
     </div>
 
     <h2 class="intro-text">Welcome ${login.nickName}</h2>
